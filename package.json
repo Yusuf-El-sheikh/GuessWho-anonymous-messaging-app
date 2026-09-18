@@ -1,0 +1,32 @@
+{
+  "name": "guesswho",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yusuf-El-sheikh/GuessWho-anonymous-messaging-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Yusuf-El-sheikh/GuessWho-anonymous-messaging-app/issues"
+  },
+  "homepage": "https://github.com/Yusuf-El-sheikh/GuessWho-anonymous-messaging-app#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^18.0.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.10.1",
+    "nodemailer": "^10.0.10"
+  }
+}
