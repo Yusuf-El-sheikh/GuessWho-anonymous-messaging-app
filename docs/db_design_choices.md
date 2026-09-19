@@ -11,13 +11,17 @@
 - isVerified [boolean] [default:false]
 - isDeleted [boolean] [default:false]
 - createdAt [date]
-- lastUpdatedAt [date]
+- updatedAt [date]
 
 ### Messages
 
-- sender [objectId>>user] [optional] [default:"GuessWho?"] [maxlength_50]
-- reciever [objectId>>user] [required] [maxlength_50]
+- sender [objectId>>user] [optional] [default:"GuessWho?"]
+- reciever [objectId>>user] [required]
 - content [string] [minlength_1] [maxlength_500]
-- sentAt [date]
-- lastUpdatedAt [date]
+- createdAt [date]
+- updatedAt [date]
 - isDeleted [boolean]
+
+# To do :
+
+- implement default sender case in the service layer since its a null in the db layer instead of an objectId
