@@ -7,7 +7,7 @@
 - name [required] [string] [minlength_3] [maxlength_50]
 - email [required] [string] [lowercase] [unique] 
 - password [optional] [string] [minlength_8] 
-- provider [google - facebook - local]
+- provider [google - local]
 - isVerified [boolean] [default:false]
 - isDeleted [boolean] [default:false]
 - createdAt [date]
