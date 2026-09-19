@@ -22,6 +22,13 @@
 - updatedAt [date]
 - isDeleted [boolean]
 
+### OTP
+
+- code [string] [required] [length_6]
+- email [string] [required] [trim] [lowercase]
+- createdAt [date]
+- expiresAt [date]
+
 # To do :
 
 - implement default sender case in the service layer since its a null in the db layer instead of an objectId

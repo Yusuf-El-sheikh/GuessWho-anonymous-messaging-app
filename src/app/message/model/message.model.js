@@ -17,7 +17,8 @@ const messageSchema = new Schema({
         type: String,
         minlength: 1,
         maxlength: 500,
-        required: true
+        required: true,
+        trim: true
     },
     isDeleted: {
         type: Boolean,
