@@ -1,4 +1,4 @@
-import { otpModel } from "../model/OTP.model"
+import { otpModel } from "../model/OTP.model.js"
 
 export async function generateOTP(email, code, expiresAt) {
     await otpModel.deleteMany({ email: email });

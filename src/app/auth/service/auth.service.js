@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { isStringObject } from "node:util/types";
-import * as authRepository from "../repository/auth.repository";
+import * as authRepository from "../repository/auth.repository.js";
+import * as OTPRepository from "../repository/OTP.repository.js";
 
 export async function registerUser(name, email, password, provider) {
     //  check if data is valid
@@ -32,7 +33,7 @@ export async function registerUser(name, email, password, provider) {
     const doc = await authRepository.createUser(name, email, hashedPassword);
 
     //  send OTP
-    await authRepository.generateOTP(email, code, expiresAt);
+    await OTPRepository.generateOTP(email, code, expiresAt);
 
     return doc;
 }
