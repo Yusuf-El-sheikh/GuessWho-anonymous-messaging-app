@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import { isStringObject } from "node:util/types";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
+import * as nodeMailer from "../../common/nodemailer/nodemailer.js"
 
 export async function registerUser(name, email, password, provider) {
     //  check if data is valid
@@ -33,7 +34,13 @@ export async function registerUser(name, email, password, provider) {
     const doc = await authRepository.createUser(name, email, hashedPassword);
 
     //  send OTP
-    await OTPRepository.generateOTP(email, code, expiresAt);
+    await OTPRepository.createOTP(email, code, expiresAt);
+
+    await nodeMailer.sendEmail(
+        email,
+        "Verification code",
+        `<h1>Your verification code is ${code}</h1>`
+    )
 
     return doc;
 }
