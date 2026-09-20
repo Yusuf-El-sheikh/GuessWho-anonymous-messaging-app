@@ -10,3 +10,12 @@ export async function createUser(name, email, password) {
     doc.password = undefined;
     return doc;
 }
+
+export async function updateIsVerified(email) {
+    const doc = await userModel.updateOne({ email: email }, { $set: { isVerified: true } });
+    return doc;
+}
+
+export async function checkIsVerified(email) {
+    return !!await userModel.findOne({email: email, isVerified: true}); 
+}
