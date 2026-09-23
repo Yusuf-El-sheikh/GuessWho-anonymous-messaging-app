@@ -1,7 +1,7 @@
 import "./app/common/db/connection.js";
 import express from "express";
 import {authRouter} from "./app/auth/auth.router.js";
-import { globalErrorHandler } from "./app/common/error/error.js";
+import { globalErrorHandler } from "./app/common/error/globalErrorHandler.js";
 const app = express();
 app.use(express.json());
 
