@@ -1,5 +1,5 @@
 //my custom error class since TS wont allow me to just ".status = whatever" anymore inn the future
-export class appError extends Error {
+export class AppError extends Error {
     constructor(message, status) {
         super(message);
         this.status = status;

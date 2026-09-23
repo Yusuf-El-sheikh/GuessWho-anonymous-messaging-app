@@ -2,21 +2,21 @@ import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
-import * as nodeMailer from "../../common/nodemailer/nodemailer.js"
-import {appError} from "../../common/error/appError.js"
+import * as nodeMailer from "../../common/nodemailer/nodemailer.js";
+import {AppError} from "../../common/error/app.error.js";
 
 export async function registerUser(name, email, password, provider) {
     //  check if data is valid
     if (!name || !email || !password || !provider) {
-        throw new appError("Invalid action: Missing required data", 400);
+        throw new AppError("Invalid action: Missing required data", 400);
     }
     if (typeof name !== "string" || typeof email !== "string" || typeof password !== "string" || typeof provider !== "string") {
-        throw new appError("Invalid action: Data type mismatch", 400);
+        throw new AppError("Invalid action: Data type mismatch", 400);
     }
 
     //  check if user exists throw
     if (await authRepository.userExists(email)) {
-        throw new appError("Invalid action: This email is already registered", 409);
+        throw new AppError("Invalid action: This email is already registered", 409);
     }
 
     //  prepare data
@@ -43,27 +43,27 @@ export async function registerUser(name, email, password, provider) {
 export async function verifyAccount(email, code) {
     //check if data is valid
     if (!email || !code) {
-        throw new appError("Invalid action: Missing required data", 400);
+        throw new AppError("Invalid action: Missing required data", 400);
     }
     if (typeof email !== "string" || typeof code !== "string") {
-        throw new appError("Invalid action: Data type mismatch", 400);
+        throw new AppError("Invalid action: Data type mismatch", 400);
     }
 
     //check user exists
     if (!await authRepository.userExists(email)) {
-        throw new appError("Invalid action: email not found", 404);
+        throw new AppError("Invalid action: email not found", 404);
     }
 
     //check code exists in db (boolean return)
     if (!await OTPRepository.checkOTPExists(email, code)) {
-        throw new appError("Invalid action: The code you entered is wrong", 400);
+        throw new AppError("Invalid action: The code you entered is wrong", 400);
     }
 
     //update email isVerified to true
     const doc = await authRepository.updateIsVerified(email);
 
     if (doc.modifiedCount == 0) {
-        throw new appError("Invalid action: Can't verify, email not found", 404);
+        throw new AppError("Invalid action: Can't verify, email not found", 404);
     }
 
     return doc;
@@ -72,20 +72,20 @@ export async function verifyAccount(email, code) {
 export async function resendOTP(email) {
     //check data is valid
     if (!email) {
-        throw new appError("Invalid action: Missing required data", 400);
+        throw new AppError("Invalid action: Missing required data", 400);
     }
     if (typeof email !== "string") {
-        throw new appError("Invalid action: Data type mismatch", 400);
+        throw new AppError("Invalid action: Data type mismatch", 400);
     }
 
     //check email exists
     if (!await authRepository.userExists(email)) {
-        throw new appError("Invalid action: Can't send code, email not found", 404);
+        throw new AppError("Invalid action: Can't send code, email not found", 404);
     }
 
     //check isVerified is true
     if (await authRepository.checkIsVerified(email)) {
-        throw new appError("Invalid action: Account is already verified", 400);
+        throw new AppError("Invalid action: Account is already verified", 400);
     }
 
     //create OTP
