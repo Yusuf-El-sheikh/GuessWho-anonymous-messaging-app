@@ -1,5 +1,5 @@
-import bcrypt from "bcrypt";
-import crypto from "node:crypto";
+import { hashPassword } from "../utils/auth.utils.js";
+import { generateOTP } from "../utils/OTP.utils.js";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
 import * as nodeMailer from "../../common/nodemailer/nodemailer.js";
@@ -20,9 +20,8 @@ export async function registerUser(name, email, password, provider) {
     }
 
     //  prepare data
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const code = crypto.randomInt(100000, 999999).toString();
-    const expiresAt = Date.now() + 5 * 60 * 1000; //expires after 5 mins
+    const hashedPassword = await hashPassword(password);
+    const {code, expiresAt} = generateOTP();
 
     //  insert user in database > isVerified is false by default
     const doc = await authRepository.createUser(name, email, hashedPassword);
@@ -89,8 +88,7 @@ export async function resendOTP(email) {
     }
 
     //create OTP
-    const code = crypto.randomInt(100000, 999999).toString();
-    const expiresAt = Date.now() + 5 * 60 * 1000; //expires after 5 mins
+    const {code, expiresAt} = generateOTP();
 
     await OTPRepository.createOTP(email, code, expiresAt);
 
