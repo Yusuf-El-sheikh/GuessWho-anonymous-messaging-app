@@ -14,7 +14,7 @@ export async function registerUser(req, res, next) {
 export async function verifyAccount(req, res, next) {
     try {
         const { email, code } = req.body;
-        const doc = await authService.verifyAccount(email, code);
+        await authService.verifyAccount(email, code);
         res.status(200).json({ message: "Your account has been verified successfully." });
     }
     catch (error) {
@@ -25,8 +25,8 @@ export async function verifyAccount(req, res, next) {
 export async function resendOTP(req, res, next) {
     try {
         const { email } = req.body;
-        const doc = await authService.resendOTP(email);
-        res.status(200).json(doc);
+        const message = await authService.resendOTP(email);
+        res.status(200).json(message);
     }
     catch (error) {
         next(error);
