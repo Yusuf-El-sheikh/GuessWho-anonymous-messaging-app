@@ -17,5 +17,10 @@ export async function updateIsVerified(email) {
 }
 
 export async function checkIsVerified(email) {
-    return !!await userModel.findOne({email: email, isVerified: true}); 
+    return !!await userModel.findOne({ email: email, isVerified: true });
+}
+
+export async function getUser(email) {
+    const doc = await userModel.findOne({ email: email });
+    return doc;
 }

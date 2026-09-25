@@ -32,3 +32,17 @@ export async function resendOTP(req, res, next) {
         next(error);
     }
 }
+
+export async function login(req, res, next) {
+    try {
+        const {email, password} = req.body;
+        const token = await authService.login(email, password);
+        res.cookie("access_token", token, {
+            httpOnly: true,
+            maxAge: 6 * 60 * 60 * 1000 
+        }).status(200).json({message: "Logged in successfully"});
+    } 
+    catch (error) {
+        next(error);    
+    }
+}

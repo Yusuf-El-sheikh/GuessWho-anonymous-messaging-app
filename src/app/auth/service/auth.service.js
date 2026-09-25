@@ -1,9 +1,9 @@
-import { hashPassword } from "../utils/auth.utils.js";
+import { hashPassword, comparePassword, generateToken } from "../utils/auth.utils.js";
 import { generateOTP } from "../utils/OTP.utils.js";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
 import * as nodeMailer from "../../common/nodemailer/nodemailer.js";
-import {AppError} from "../../common/error/app.error.js";
+import { AppError } from "../../common/error/app.error.js";
 
 export async function registerUser(name, email, password, provider) {
     //  check if data is valid
@@ -21,7 +21,7 @@ export async function registerUser(name, email, password, provider) {
 
     //  prepare data
     const hashedPassword = await hashPassword(password);
-    const {code, expiresAt} = generateOTP();
+    const { code, expiresAt } = generateOTP();
 
     //  insert user in database > isVerified is false by default
     const doc = await authRepository.createUser(name, email, hashedPassword);
@@ -88,7 +88,7 @@ export async function resendOTP(email) {
     }
 
     //create OTP
-    const {code, expiresAt} = generateOTP();
+    const { code, expiresAt } = generateOTP();
 
     await OTPRepository.createOTP(email, code, expiresAt);
 
@@ -99,4 +99,28 @@ export async function resendOTP(email) {
     )
 
     return { message: "OTP sent to your mailbox" };
+}
+
+export async function login(email, password) {
+    //check data is valid --TODO using zod
+    //check user exists
+    if (!await authRepository.userExists(email)) {
+        throw new AppError("Invalid action: Account not found", 404);
+    }
+
+    //check if user is not verified
+    if (!await authRepository.checkIsVerified(email)) {
+        throw new AppError("Invalid action: Account not verified", 400);
+    }
+
+    //check password
+    const user = await authRepository.getUser(email);
+    if (!await comparePassword(password, user.password)) {
+        throw new AppError("Invalid action: Incorrect password", 400);
+    }
+
+    //generate token and  send it on cookie
+    const token = generateToken({ id: user._id, email: user.email, name: user.name });
+
+    return token;
 }
