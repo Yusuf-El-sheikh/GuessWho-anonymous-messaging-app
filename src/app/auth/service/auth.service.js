@@ -98,7 +98,7 @@ export async function resendOTP(email) {
         `<h1>Your verification code is ${code}</h1>`
     )
 
-    return { message: "OTP sent to your mailbox" };
+    return { message: "Verification code sent to your mailbox" };
 }
 
 export async function login(email, password) {
@@ -123,4 +123,28 @@ export async function login(email, password) {
     const token = generateToken({ id: user._id, email: user.email, name: user.name });
 
     return token;
+}
+
+export async function resetPassword(code, email, newPassword) {
+    //resend otp already validates data and sends otp so its front end job to redirect the pages
+    //TODO validate data using {zod}
+    
+    //check email exists
+    if(!await authRepository.userExists(email)){
+        throw new AppError("Invalid action: Account not found", 404);
+    }
+
+    //check otp exists
+    if(!await OTPRepository.checkOTPExists(email, code)){
+        throw new AppError("Invalid action: The code you entered is wrong", 400);
+    }
+    //if both are true update password and return success
+
+    const hashedPassword = hashPassword(password);
+
+    if(!await authRepository.updatePassword(email, hashedPassword)){
+        throw new AppError("Invalid action: Account no longer exists", 404);
+    }
+
+    return {message: "Your password was reset successfully"};
 }

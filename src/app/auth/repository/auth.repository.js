@@ -24,3 +24,8 @@ export async function getUser(email) {
     const doc = await userModel.findOne({ email: email });
     return doc;
 }
+
+export async function updatePassword(email, newPassword) {
+    const doc = await userModel.updateOne({email: email}, {$set: {password: newPassword}});
+    return doc;
+}
