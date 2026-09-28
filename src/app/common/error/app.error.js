@@ -1,10 +1,10 @@
 //my custom error class since TS wont allow me to just ".status = whatever" anymore inn the future
 export class AppError extends Error {
-    constructor(message, status) {
-        super(message);
-        this.status = status;
-        Error.captureStackTrace(this, this.constructor);
-    }
+  constructor(message, status) {
+    super(message);
+    this.status = status;
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
 
 /*ok one thing i wanted to point out, while studying i realized that making ready instances of 

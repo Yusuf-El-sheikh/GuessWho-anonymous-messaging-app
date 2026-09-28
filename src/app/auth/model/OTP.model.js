@@ -1,31 +1,34 @@
-import { model, Schema } from "mongoose"
+import { model, Schema } from "mongoose";
 
 // OTP schema
 
-const otpSchema = new Schema({
+const otpSchema = new Schema(
+  {
     code: {
-        type: String,
-        required: true,
-        minlength: 6,
-        maxlength: 6
+      type: String,
+      required: true,
+      minlength: 6,
+      maxlength: 6,
     },
     email: {
-        type: String,
-        required: true,
-        trim: true,
-        lowercase: true
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
     },
     expiresAt: {
-        type: Date, 
-        required: true,
-        index: {expireAfterSeconds: 0}
-    }
-}, {
+      type: Date,
+      required: true,
+      index: { expireAfterSeconds: 0 },
+    },
+  },
+  {
     timestamps: {
-        createdAt: true,
-        updatedAt: false
-    }
-});
+      createdAt: true,
+      updatedAt: false,
+    },
+  },
+);
 
 // OTP model
 
