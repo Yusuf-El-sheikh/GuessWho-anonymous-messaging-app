@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 config();
-import "./app/common/db/connection.js";
+await import ("./app/common/db/connection.js");
 import express from "express";
 import { authRouter } from "./app/auth/auth.router.js";
 import { globalErrorHandler } from "./app/common/error/globalErrorHandler.js";

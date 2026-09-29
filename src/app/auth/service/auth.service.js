@@ -154,9 +154,9 @@ export async function resetPassword(code, email, newPassword) {
   }
   //if both are true update password and return success
 
-  const hashedPassword = hashPassword(newPassword);
+  const hashedPassword = await hashPassword(newPassword);
 
-  if (!(await authRepository.updatePassword(email, hashedPassword))) {
+  if ((await authRepository.updatePassword(email, hashedPassword)).modifiedCount === 0) {
     throw new AppError("Invalid action: Account no longer exists", 404);
   }
 
