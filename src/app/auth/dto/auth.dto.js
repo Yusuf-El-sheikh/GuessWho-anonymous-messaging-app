@@ -11,12 +11,17 @@ export const loginDTO = z.object({
   password: z.string().trim().min(8),
 });
 
+export const verifyAccountDTO = z.object({
+  email: z.email().trim().lowercase(),
+  code: z.string().trim().min(6).max(6),
+});
+
 export const sendDTO = z.object({
   email: z.email().trim().lowercase(),
 });
 
 export const resetPasswordDTO = z.object({
-  email: z.email().trim().lowercase(), //string then trim todo then we call everything in its place tommorow
+  email: z.email().trim().lowercase(),
   newPassword: z.string().trim().min(8),
   code: z.string().trim().min(6).max(6),
 });
