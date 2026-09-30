@@ -4,8 +4,8 @@ import { loginDTO, registerDTO, resetPasswordDTO, sendDTO, verifyAccountDTO } fr
 
 export async function registerUser(req, res, next) {
   try {
-    const { name, email, password, provider } = validateBody(registerDTO, req.body);
-    const doc = await authService.registerUser(name, email, password, provider);
+    const { name, email, password} = validateBody(registerDTO, req.body);
+    const doc = await authService.registerUser(name, email, password);
     res.status(201).json(doc);
   } catch (error) {
     next(error);

@@ -9,20 +9,7 @@ import * as OTPRepository from "../repository/OTP.repository.js";
 import * as nodeMailer from "../../common/nodemailer/nodemailer.js";
 import { AppError } from "../../common/error/app.error.js";
 
-export async function registerUser(name, email, password, provider) {
-  //  check if data is valid
-  if (!name || !email || !password || !provider) {
-    throw new AppError("Invalid action: Missing required data", 400);
-  }
-  if (
-    typeof name !== "string" ||
-    typeof email !== "string" ||
-    typeof password !== "string" ||
-    typeof provider !== "string"
-  ) {
-    throw new AppError("Invalid action: Data type mismatch", 400);
-  }
-
+export async function registerUser(name, email, password) {
   //  check if user exists throw
   if (await authRepository.userExists(email)) {
     throw new AppError("Invalid action: This email is already registered", 409);
@@ -49,17 +36,9 @@ export async function registerUser(name, email, password, provider) {
 }
 
 export async function verifyAccount(email, code) {
-  //check if data is valid
-  if (!email || !code) {
-    throw new AppError("Invalid action: Missing required data", 400);
-  }
-  if (typeof email !== "string" || typeof code !== "string") {
-    throw new AppError("Invalid action: Data type mismatch", 400);
-  }
-
   //check user exists
   if (!(await authRepository.userExists(email))) {
-    throw new AppError("Invalid action: email not found", 404);
+    throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
   //check code exists in db (boolean return)
@@ -71,29 +50,21 @@ export async function verifyAccount(email, code) {
   const doc = await authRepository.updateIsVerified(email);
 
   if (doc.modifiedCount == 0) {
-    throw new AppError("Invalid action: Can't verify, email not found", 404);
+    throw new AppError("Invalid action: Account not found", 404);
   }
 
   return doc;
 }
 
 export async function resendOTP(email) {
-  //check data is valid
-  if (!email) {
-    throw new AppError("Invalid action: Missing required data", 400);
-  }
-  if (typeof email !== "string") {
-    throw new AppError("Invalid action: Data type mismatch", 400);
-  }
-
   //check email exists
   if (!(await authRepository.userExists(email))) {
-    throw new AppError("Invalid action: Can't send code, email not found", 404);
+    throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
   //check isVerified is true
   if (await authRepository.checkIsVerified(email)) {
-    throw new AppError("Invalid action: Account is already verified", 400);
+    throw new AppError("Invalid action: Invalid request", 409);
   }
 
   //create OTP
@@ -112,21 +83,20 @@ export async function resendOTP(email) {
 }
 
 export async function login(email, password) {
-  //check data is valid --TODO using zod
   //check user exists
   if (!(await authRepository.userExists(email))) {
-    throw new AppError("Invalid action: Account not found", 404);
-  }
-
-  //check if user is not verified
-  if (!(await authRepository.checkIsVerified(email))) {
-    throw new AppError("Invalid action: Account not verified", 400);
+    throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
   //check password
   const user = await authRepository.getUser(email);
   if (!(await comparePassword(password, user.password))) {
-    throw new AppError("Invalid action: Incorrect password", 400);
+    throw new AppError("Invalid action: Invalid credentials", 401);
+  }
+  
+  //check if user is not verified
+  if (!(await authRepository.checkIsVerified(email))) {
+    throw new AppError("Invalid action: Account not verified", 403);
   }
 
   //generate token and  send it on cookie
@@ -141,11 +111,10 @@ export async function login(email, password) {
 
 export async function resetPassword(code, email, newPassword) {
   //resend otp already validates data and sends otp so its front end job to redirect the pages
-  //TODO validate data using {zod}
 
   //check email exists
   if (!(await authRepository.userExists(email))) {
-    throw new AppError("Invalid action: Account not found", 404);
+    throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
   //check otp exists
@@ -156,8 +125,11 @@ export async function resetPassword(code, email, newPassword) {
 
   const hashedPassword = await hashPassword(newPassword);
 
-  if ((await authRepository.updatePassword(email, hashedPassword)).modifiedCount === 0) {
-    throw new AppError("Invalid action: Account no longer exists", 404);
+  if (
+    (await authRepository.updatePassword(email, hashedPassword))
+      .modifiedCount === 0
+  ) {
+    throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
   return { message: "Your password was reset successfully" };

@@ -7,7 +7,7 @@ export function validateBody(dto, body) {
     const errMessages = result.error.issues.map((issue) => {
       return `${issue.path[0]}: ${issue.message}`;
     });
-    throw new AppError(errMessages.join(", "), 400);
+    throw new AppError(`Invalid action: ${errMessages.join(", ")}`, 400);
   }
   return result.data;
 }
