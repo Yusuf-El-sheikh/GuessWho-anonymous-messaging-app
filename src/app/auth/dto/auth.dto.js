@@ -1,22 +1,22 @@
 import { z } from "zod";
 
 export const registerDTO = z.object({
-  email: z.email().lowercase().trim(),
-  name: z.string().minLength(2).maxLength(50),
-  password: z.string().minLength(8).trim(),
+  email: z.email().trim().lowercase(),
+  name: z.string().min(3).max(50),
+  password: z.string().trim().min(8),
 });
 
 export const loginDTO = z.object({
-  email: z.email().lowercase().trim(),
-  password: z.string().minLength(8).trim(),
+  email: z.email().trim().lowercase(),
+  password: z.string().trim().min(8),
 });
 
 export const sendDTO = z.object({
-  email: z.email().lowercase().trim(),
+  email: z.email().trim().lowercase(),
 });
 
 export const resetPasswordDTO = z.object({
-  email: z.email().lowercase().trim(),
-  newPassword: z.string().minLength(8).trim(),
-  code: z.string().minLength(6).trim(),
+  email: z.email().trim().lowercase(), //string then trim todo then we call everything in its place tommorow
+  newPassword: z.string().trim().min(8),
+  code: z.string().trim().min(6).max(6),
 });
