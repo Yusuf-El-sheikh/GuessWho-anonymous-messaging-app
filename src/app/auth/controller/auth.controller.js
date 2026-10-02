@@ -1,10 +1,16 @@
 import * as authService from "../service/auth.service.js";
 import { validateBody } from "../../common/validation/validation.js";
-import { loginDTO, registerDTO, resetPasswordDTO, sendDTO, verifyAccountDTO } from "../dto/auth.dto.js";
+import {
+  loginDTO,
+  registerDTO,
+  resetPasswordDTO,
+  sendDTO,
+  verifyAccountDTO,
+} from "../dto/auth.dto.js";
 
 export async function registerUser(req, res, next) {
   try {
-    const { name, email, password} = validateBody(registerDTO, req.body);
+    const { name, email, password } = validateBody(registerDTO, req.body);
     const doc = await authService.registerUser(name, email, password);
     res.status(201).json(doc);
   } catch (error) {
@@ -50,9 +56,27 @@ export async function login(req, res, next) {
   }
 }
 
+export async function loginWithGoogle(req, res, next) {
+  try {
+    const token = await authService.loginWithGoogle(req.body.idToken);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        maxAge: 6 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({ message: "Logged in successfully" });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export async function resetPassword(req, res, next) {
   try {
-    const { email, code, newPassword } = validateBody(resetPasswordDTO, req.body);
+    const { email, code, newPassword } = validateBody(
+      resetPasswordDTO,
+      req.body,
+    );
     const message = await authService.resetPassword(code, email, newPassword);
     res.status(200).json(message);
   } catch (error) {

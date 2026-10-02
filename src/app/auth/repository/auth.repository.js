@@ -5,12 +5,8 @@ export async function userExists(email) {
   return !!(await userModel.findOne({ email: email }));
 }
 
-export async function createUser(name, email, password) {
-  const doc = await userModel.create({
-    name: name,
-    email: email,
-    password: password,
-  });
+export async function createUser(userData) {
+  const doc = await userModel.create(userData);
   doc.password = undefined;
   return doc;
 }

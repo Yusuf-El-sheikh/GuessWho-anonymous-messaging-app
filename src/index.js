@@ -1,11 +1,14 @@
-import { config } from "dotenv";
-config();
-await import ("./app/common/db/connection.js");
+import "dotenv/config.js"
+import "./app/common/db/connection.js";
 import express from "express";
 import { authRouter } from "./app/auth/auth.router.js";
 import { globalErrorHandler } from "./app/common/error/globalErrorHandler.js";
+import cors from "cors"
+
 const app = express();
 app.use(express.json());
+
+app.use(cors({origin: "http://localhost:4200"}))
 
 app.use("/guess-who/auth", authRouter);
 

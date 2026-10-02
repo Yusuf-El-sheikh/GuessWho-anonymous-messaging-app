@@ -2,6 +2,7 @@ import {
   hashPassword,
   comparePassword,
   generateToken,
+  verifyGoogleToken,
 } from "../utils/auth.utils.js";
 import { generateOTP } from "../utils/OTP.utils.js";
 import * as authRepository from "../repository/auth.repository.js";
@@ -20,7 +21,11 @@ export async function registerUser(name, email, password) {
   const { code, expiresAt } = generateOTP();
 
   //  insert user in database > isVerified is false by default
-  const doc = await authRepository.createUser(name, email, hashedPassword);
+  const doc = await authRepository.createUser({
+    name,
+    email,
+    password: hashedPassword,
+  });
 
   //  save OTP in db
   await OTPRepository.createOTP(email, code, expiresAt);
@@ -90,10 +95,13 @@ export async function login(email, password) {
 
   //check password
   const user = await authRepository.getUser(email);
+  if(typeof user.password === "undefined"){
+    throw new AppError("Invalid action: Invalid credentials", 401);
+  }
   if (!(await comparePassword(password, user.password))) {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
-  
+
   //check if user is not verified
   if (!(await authRepository.checkIsVerified(email))) {
     throw new AppError("Invalid action: Account not verified", 403);
@@ -107,6 +115,35 @@ export async function login(email, password) {
   });
 
   return token;
+}
+
+export async function loginWithGoogle(idToken) {
+  //verify idToken
+  const payload = await verifyGoogleToken(idToken);
+
+  //if user exists create token
+  const user = await authRepository.getUser(payload.email);
+  if (user) {
+    return generateToken({
+      id: user._id,
+      email: user.email,
+      name: user.name,
+    });
+  }
+
+  //if user does not exist create then make token
+  const generatedUser = await authRepository.createUser({
+    name: payload.name,
+    email: payload.email,
+    isVerified: true,
+    provider: "google",
+  });
+
+  return generateToken({
+      id: generatedUser._id,
+      email: generatedUser.email,
+      name: generatedUser.name,
+    });
 }
 
 export async function resetPassword(code, email, newPassword) {
