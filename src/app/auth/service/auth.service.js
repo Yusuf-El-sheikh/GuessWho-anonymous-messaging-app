@@ -67,11 +67,6 @@ export async function resendOTP(email) {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
-  //check isVerified is true
-  if (await authRepository.checkIsVerified(email)) {
-    throw new AppError("Invalid action: Invalid request", 409);
-  }
-
   //create OTP
   const { code, expiresAt } = generateOTP();
 
