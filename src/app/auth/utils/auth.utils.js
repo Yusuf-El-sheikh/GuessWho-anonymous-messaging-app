@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { OAuth2Client } from "google-auth-library";
 import jwt from "jsonwebtoken";
-import { AppError } from "../../common/error/app.error.js";
+import { AppError } from "../../../lib/error/app.error.js";
 
 export async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
