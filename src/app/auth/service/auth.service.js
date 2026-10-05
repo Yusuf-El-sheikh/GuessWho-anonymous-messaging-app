@@ -46,6 +46,8 @@ export async function verifyAccount(email, code) {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
+  //todo check is verified 
+  
   //check code exists in db (boolean return)
   if (!(await OTPRepository.checkOTPExists(email, code))) {
     throw new AppError("Invalid action: The code you entered is wrong", 400);
