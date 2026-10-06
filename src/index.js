@@ -1,8 +1,8 @@
 import "dotenv/config.js"
-import "./app/common/db/connection.js";
+import "./lib/db/connection.js";
 import express from "express";
 import { authRouter } from "./app/auth/auth.router.js";
-import { globalErrorHandler } from "./app/common/error/globalErrorHandler.js";
+import { globalErrorHandler } from "./pkg/error/globalErrorHandler.js";
 import cors from "cors"
 
 const app = express();

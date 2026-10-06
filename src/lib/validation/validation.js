@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AppError } from "../error/app.error.js";
+import { AppError } from "../../pkg/error/app.error.js";
 
 export function validateBody(dto, body) {
   const result = z.safeParse(dto, body);

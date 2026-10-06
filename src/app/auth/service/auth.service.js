@@ -8,7 +8,7 @@ import { generateOTP } from "../utils/OTP.utils.js";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
 import * as nodeMailer from "../../../lib/nodemailer/nodemailer.js";
-import { AppError } from "../../../lib/error/app.error.js";
+import { AppError } from "../../../pkg/error/app.error.js";
 
 export async function registerUser(name, email, password) {
   //  check if user exists throw

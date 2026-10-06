@@ -1,5 +1,5 @@
 import * as authService from "../service/auth.service.js";
-import { validateBody } from "../../common/validation/validation.js";
+import { validateBody } from "../../../lib/validation/validation.js";
 import {
   loginDTO,
   registerDTO,
