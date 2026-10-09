@@ -6,15 +6,15 @@ export class MailjetProvider {
 
   constructor(config) {
     this.client = new Mailjet({
-      apiKey: config.apikey,
+      apiKey: config.apiKey,
       apiSecret: config.secretKey,
     });
     this.fromEmail = config.fromEmail;
     this.fromName = config.fromName;
   }
 
-  sendMail(email, subject, html) {
-    this.client.post("send", { version: "v3.1" }).request({
+  async sendMail(email, subject, html) {
+    await this.client.post("send", { version: "v3.1" }).request({
       Messages: [
         {
           From: {
@@ -27,8 +27,8 @@ export class MailjetProvider {
               Name: "You",
             },
           ],
-          subject: subject,
-          HTMLpart: html,
+          Subject: subject,
+          HTMLPart: html,
         },
       ],
     });
