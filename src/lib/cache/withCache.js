@@ -5,7 +5,7 @@ export function withCache(ttl = 3600) {
     let key = `${req.method}:${req.originalUrl}`;
     const cached = await cacheProvider.get(key);
     if (cached) {
-        res.setHeader("X-Cache", "Hit");
+      res.setHeader("X-Cache", "Hit");
       return res.json(JSON.parse(cached));
     }
 
@@ -13,12 +13,14 @@ export function withCache(ttl = 3600) {
 
     //interceptor
     res.json = async (body) => {
-      //cache first
-      await cacheProvider.set(key, JSON.stringify(body), ttl);
+      if (res.statusCode >= 200 && res.statusCode < 300) {
+        //cache first
+        await cacheProvider.set(key, JSON.stringify(body), ttl);
 
-      //send response
-      res.setHeader("X-Cache", "Miss");
-      return originalJson(body);
+        //send response
+        res.setHeader("X-Cache", "Miss");
+        return originalJson(body);
+      }
     };
     next();
   };
