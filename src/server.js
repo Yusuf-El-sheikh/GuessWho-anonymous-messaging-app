@@ -6,8 +6,8 @@ import { logger } from "./pkg/logger/logger.js";
 const server = http.createServer(createApp);
 
 server.listen(env.port, () => {
-    logger.info("server running on port 3000\n\nhttp://localhost:3000");
-  });
+  logger.info("server running on port 3000\n\nhttp://localhost:3000");
+});
 
 async function shutdown() {
   server.close();
@@ -15,6 +15,6 @@ async function shutdown() {
   process.exit(0);
 }
 
-server.on("SIGINT", shutdown);
+process.on("SIGINT", shutdown);
 
-server.on("SIGTERM", shutdown);
+process.on("SIGTERM", shutdown);
