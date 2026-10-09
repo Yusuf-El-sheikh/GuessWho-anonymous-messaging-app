@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import { logger } from "./pkg/logger/logger.js";
 import { env } from "./lib/config/env.js";
 
-const server = http.createServer(createApp);
+const server = http.createServer(createApp());
 
 server.listen(env.port, () => {
   logger.info("server running on port 3000\n\nhttp://localhost:3000");
