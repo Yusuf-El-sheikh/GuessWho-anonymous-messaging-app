@@ -2,6 +2,7 @@ import http from "http";
 import { createApp } from "./index.js";
 import mongoose from "mongoose";
 import { logger } from "./pkg/logger/logger.js";
+import { env } from "./lib/config/env.js";
 
 const server = http.createServer(createApp);
 
