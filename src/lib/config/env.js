@@ -1,12 +1,14 @@
 import { z } from "zod";
 
-import {config} from "dotenv"
+import { config } from "dotenv";
 config();
 
 const schema = z.object({
   PORT: z.string().default(3000),
 
   DB_URL: z.string(),
+
+  APP_NAME: z.string(),
 
   EMAIL: z.string().trim().toLowerCase(),
   APP_PASS: z.string(),
@@ -18,6 +20,9 @@ const schema = z.object({
   REDIS_PORT: z.string().default(6379),
   REDIS_HOST: z.string(),
   REDIS_PASS: z.string(),
+
+  MAILJET_API_KEY: z.string().trim(),
+  MAILJET_SECRET: z.string().trim(),
 });
 
 const parsed = schema.parse(process.env); //check if process.env mathces the schema
@@ -36,6 +41,7 @@ export const env = {
   },
 
   nodemailer: {
+    appName: parsed.APP_NAME,
     email: parsed.EMAIL,
     pass: parsed.APP_PASS,
   },
@@ -46,5 +52,12 @@ export const env = {
 
   google: {
     clientId: parsed.GOOGLE_CLIENT_ID,
+  },
+
+  mailjet: {
+    appName: parsed.APP_NAME,
+    apiKey: parsed.MAILJET_API_KEY,
+    secretKey: parsed.MAILJET_SECRET,
+    fromEmail: parsed.EMAIL,
   },
 };

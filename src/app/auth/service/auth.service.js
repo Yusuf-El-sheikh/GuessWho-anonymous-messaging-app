@@ -7,8 +7,9 @@ import {
 import { generateOTP } from "../utils/OTP.utils.js";
 import * as authRepository from "../repository/auth.repository.js";
 import * as OTPRepository from "../repository/OTP.repository.js";
-import * as nodeMailer from "../../../lib/nodemailer/nodemailer.js";
+import * as nodeMailer from "../../../lib/email/nodemailer.js";
 import { AppError } from "../../../lib/error/app.error.js";
+import { mailjetProvider } from "../../../lib/email/init.js";
 
 export async function registerUser(name, email, password) {
   //  check if user exists throw
@@ -31,7 +32,7 @@ export async function registerUser(name, email, password) {
   await OTPRepository.createOTP(email, code, expiresAt);
 
   // send the otp to email
-  await nodeMailer.sendEmail(
+  await mailjetProvider.sendMail(
     email,
     "Verification code",
     `<h1>Your verification code is ${code}</h1>`,
@@ -75,7 +76,7 @@ export async function resendOTP(email) {
   await OTPRepository.createOTP(email, code, expiresAt);
 
   //resend it via mail
-  await nodeMailer.sendEmail(
+  await mailjetProvider.sendMail(
     email,
     "Verification code",
     `<h1>Your verification code is ${code}</h1>`,
