@@ -1,9 +1,9 @@
 import "./lib/db/connection.js";
 import express from "express";
 import { authRouter } from "./app/auth/auth.router.js";
+import { messageRouter } from "./app/message/message.router.js";
 import { globalErrorHandler } from "./lib/error/globalErrorHandler.js";
 import cors from "cors";
-import { env } from "./lib/config/env.js";
 import { correlationId } from "./lib/correlation/correlationId.js";
 
 export function createApp() {
@@ -15,6 +15,7 @@ export function createApp() {
   app.use(correlationId);
 
   app.use("/guess-who/auth", authRouter);
+  app.use("/guess-who/message", messageRouter);
 
   app.use(globalErrorHandler);
 

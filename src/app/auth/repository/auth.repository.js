@@ -1,5 +1,4 @@
 import { userModel } from "../../user/model/user.model.js";
-import crypto from "node:crypto";
 
 export async function userExists(email) {
   return !!(await userModel.findOne({ email: email }));
