@@ -6,3 +6,11 @@ export async function createMessage(sender, reciever, content) {
     content: content,
   });
 }
+
+export async function getAllMessages(userId) {
+  return await messageModel.find(
+    { reciever: userId },
+    {},
+    { populate: { path: "sender", select: ["-password", "-email"] } },
+  );
+}

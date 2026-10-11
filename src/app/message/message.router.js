@@ -5,3 +5,4 @@ export const messageRouter = new Router();
 
 messageRouter.post("/", messageController.sendMessage); //anonymous message
 messageRouter.post("/public", guard, messageController.sendMessage); //known sender
+messageRouter.get("/get-all-messages", guard, messageController.getAllMessages);

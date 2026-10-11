@@ -13,7 +13,20 @@ export async function sendMessage(sender, reciever, content) {
   }
 
   //save message into my db
-  const message = await messageRepository.createMessage(sender, reciever, content);
+  const message = await messageRepository.createMessage(
+    sender,
+    reciever,
+    content,
+  );
 
   return message;
+}
+
+export async function getAllMessages(userId) {
+  const userMessages = await messageRepository.getAllMessages(userId);
+  if (userMessages.length === 0) {
+    throw new AppError("Ivalid action: No messages found", 404);
+  }
+
+  return userMessages
 }
