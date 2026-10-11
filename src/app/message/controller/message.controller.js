@@ -1,7 +1,7 @@
 import * as messageService from "../service/message.service.js";
 import { validateBody } from "../../../lib/validation/validation.js";
 import { sendMessageDto } from "../dto/message.dto.js";
-export async function createMessage(req, res, next) {
+export async function sendMessage(req, res, next) {
   try {
     const data = validateBody(sendMessageDto, req.body);
 

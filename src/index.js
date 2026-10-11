@@ -5,10 +5,14 @@ import { messageRouter } from "./app/message/message.router.js";
 import { globalErrorHandler } from "./lib/error/globalErrorHandler.js";
 import cors from "cors";
 import { correlationId } from "./lib/correlation/correlationId.js";
+import cookieParser from "cookie-parser";
 
 export function createApp() {
   const app = express();
+
   app.use(express.json());
+
+  app.use(cookieParser());
 
   app.use(cors({ origin: "http://localhost:4200" }));
 

@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Yusuf-El-sheikh/GuessWho-anonymous-messaging-app#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^18.0.0",
     "express": "^5.2.1",
