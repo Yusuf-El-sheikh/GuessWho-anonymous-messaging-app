@@ -4,7 +4,7 @@ import { authRouter } from "./app/auth/auth.router.js";
 import { messageRouter } from "./app/message/message.router.js";
 import { globalErrorHandler } from "./lib/error/globalErrorHandler.js";
 import cors from "cors";
-import { correlationId } from "./lib/correlation/correlationId.js";
+import { correlationId } from "./pkg/correlation/correlationId.js";
 import cookieParser from "cookie-parser";
 
 export function createApp() {
