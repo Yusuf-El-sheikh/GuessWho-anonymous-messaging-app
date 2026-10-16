@@ -1,8 +1,8 @@
 import multer, { diskStorage } from "multer";
 import crypto from "node:crypto";
-import { AppError } from "../error/app.error";
+import { AppError } from "../error/app.error.js";
 
-function fileUpload(allowedTypes = ["image/png", "image/jpg"]) {
+function fileUpload(allowedTypes = ["image/png", "image/jpeg"]) {
   return multer({
     fileFilter: (req, file, callback) => {
       if (!allowedTypes.includes(file.mimetype)) {
@@ -10,6 +10,7 @@ function fileUpload(allowedTypes = ["image/png", "image/jpg"]) {
           new AppError("Invalid action: invalid file format", 400),
           false,
         );
+        return;
       }
 
       callback(null, true); 
@@ -25,7 +26,7 @@ function fileUpload(allowedTypes = ["image/png", "image/jpg"]) {
 
 export function uploadSingleFile(
   fieldName,
-  allowedTypes = ["image/png", "image/jpg"],
+  allowedTypes = ["image/png", "image/jpeg"],
 ) {
   return fileUpload(allowedTypes).single(fieldName);
 }
