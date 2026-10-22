@@ -20,3 +20,4 @@ authRouter.patch(
   guard,
   authController.updateTwoWayAuth,
 );
+authRouter.post("/login-with-two-way-authentication", authController.loginWithTwoWayAuth);

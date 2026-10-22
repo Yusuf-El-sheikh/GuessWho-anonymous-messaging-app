@@ -44,14 +44,19 @@ export async function resendOTP(req, res, next) {
 export async function login(req, res, next) {
   try {
     const { email, password } = validateBody(loginDTO, req.body);
-    const token = await authService.login(email, password);
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-        maxAge: 6 * 60 * 60 * 1000,
-      })
-      .status(200)
-      .json({ message: "Logged in successfully" });
+    const result = await authService.login(email, password);
+    //  if result is a string, it means it's a token, otherwise it's an object with message
+    if (typeof result === "string") {
+      res
+        .cookie("access_token", result, {
+          httpOnly: true,
+          maxAge: 6 * 60 * 60 * 1000,
+        })
+        .status(200)
+        .json({ message: "Logged in successfully" });
+    } else {
+      res.status(202).json(result);
+    }
   } catch (error) {
     next(error);
   }
@@ -91,6 +96,22 @@ export async function updateTwoWayAuth(req, res, next) {
     const { twoWayAuth, code } = validateBody(updateTwoWayAuthDTO, req.body);
     const message = await authService.updateTwoWayAuth(email, code, twoWayAuth);
     res.status(200).json(message);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function loginWithTwoWayAuth(req, res, next) {
+  try {
+    const { email, code } = validateBody(verifyAccountDTO, req.body);
+    const token = await authService.loginWithTwoWayAuth(email, code);
+    res
+      .cookie("access_token", token, {
+        httpOnly: true,
+        maxAge: 6 * 60 * 60 * 1000,
+      })
+      .status(200)
+      .json({ message: "Logged in successfully" });
   } catch (error) {
     next(error);
   }

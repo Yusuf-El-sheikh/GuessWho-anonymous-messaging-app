@@ -105,7 +105,35 @@ export async function login(email, password) {
     throw new AppError("Invalid action: Account not verified", 403);
   }
 
-  //generate token and  send it on cookie
+  if (user.twoWayAuth === false) {
+    //generate token and  send it on cookie
+    const token = generateToken({
+      id: user._id,
+      email: user.email,
+      name: user.name,
+    });
+    return token;
+  } else {
+    return await resendOTP(email);
+  }
+}
+
+export async function loginWithTwoWayAuth(email, code) {
+  const user = await authRepository.getUser(email);
+  if (!user) {
+    throw new AppError("Invalid action: Invalid credentials", 401);
+  }
+  if (user.twoWayAuth === false) {
+    throw new AppError(
+      "Invalid action: Two-way authentication is not enabled for this account",
+      400,
+    );
+  }
+
+  if (!(await OTPRepository.checkOTPExists(email, code))) {
+    throw new AppError("Invalid action: The code you entered is wrong", 400);
+  }
+
   const token = generateToken({
     id: user._id,
     email: user.email,
@@ -172,12 +200,15 @@ export async function resetPassword(code, email, newPassword) {
 
 export async function updateTwoWayAuth(email, code, twoWayAuth) {
   //if the code exists in the otp table
-  if (!await OTPRepository.checkOTPExists(email, code)) {
+  if (!(await OTPRepository.checkOTPExists(email, code))) {
     throw new AppError("Invalid action: The code you entered is wrong", 400);
   }
 
   //if the code exists update the twoWayAuth field in the user table
-  if ((await authRepository.updateTwoWayAuth(email, twoWayAuth)).matchedCount === 0) {
+  if (
+    (await authRepository.updateTwoWayAuth(email, twoWayAuth)).matchedCount ===
+    0
+  ) {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
