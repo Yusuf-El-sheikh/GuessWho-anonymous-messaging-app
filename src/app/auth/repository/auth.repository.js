@@ -34,3 +34,11 @@ export async function updatePassword(email, newPassword) {
   );
   return doc;
 }
+
+export async function updateTwoWayAuth(email, twoWayAuth) {
+  const doc = await userModel.updateOne(
+    { email: email },
+    { $set: { twoWayAuth: twoWayAuth } },
+  );
+  return doc;
+}

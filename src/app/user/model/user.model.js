@@ -40,6 +40,10 @@ const userSchema = new Schema(
     profilePicturePath: {
       type: String,
     },
+    twoWayAuth: {
+      type: Boolean,
+      default: false,
+    }
   },
   {
     timestamps: {

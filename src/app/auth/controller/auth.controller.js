@@ -6,6 +6,7 @@ import {
   resetPasswordDTO,
   sendDTO,
   verifyAccountDTO,
+  updateTwoWayAuthDTO,
 } from "../dto/auth.dto.js";
 
 export async function registerUser(req, res, next) {
@@ -78,6 +79,17 @@ export async function resetPassword(req, res, next) {
       req.body,
     );
     const message = await authService.resetPassword(code, email, newPassword);
+    res.status(200).json(message);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function updateTwoWayAuth(req, res, next) {
+  try {
+    const email = req.user.email;
+    const { twoWayAuth, code } = validateBody(updateTwoWayAuthDTO, req.body);
+    const message = await authService.updateTwoWayAuth(email, code, twoWayAuth);
     res.status(200).json(message);
   } catch (error) {
     next(error);

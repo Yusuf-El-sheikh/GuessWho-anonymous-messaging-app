@@ -25,3 +25,8 @@ export const resetPasswordDTO = z.object({
   newPassword: z.string().trim().min(8),
   code: z.string().trim().min(6).max(6),
 });
+
+export const updateTwoWayAuthDTO = z.object({
+  code: z.string().trim().min(6).max(6),
+  twoWayAuth: z.boolean(),
+});

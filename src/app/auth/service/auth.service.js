@@ -47,8 +47,8 @@ export async function verifyAccount(email, code) {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
 
-  //todo check is verified 
-  
+  //todo check is verified
+
   //check code exists in db (boolean return)
   if (!(await OTPRepository.checkOTPExists(email, code))) {
     throw new AppError("Invalid action: The code you entered is wrong", 400);
@@ -93,7 +93,7 @@ export async function login(email, password) {
 
   //check password
   const user = await authRepository.getUser(email);
-  if(typeof user.password === "undefined"){
+  if (typeof user.password === "undefined") {
     throw new AppError("Invalid action: Invalid credentials", 401);
   }
   if (!(await comparePassword(password, user.password))) {
@@ -138,10 +138,10 @@ export async function loginWithGoogle(idToken) {
   });
 
   return generateToken({
-      id: generatedUser._id,
-      email: generatedUser.email,
-      name: generatedUser.name,
-    });
+    id: generatedUser._id,
+    email: generatedUser.email,
+    name: generatedUser.name,
+  });
 }
 
 export async function resetPassword(code, email, newPassword) {
@@ -168,4 +168,18 @@ export async function resetPassword(code, email, newPassword) {
   }
 
   return { message: "Your password was reset successfully" };
+}
+
+export async function updateTwoWayAuth(email, code, twoWayAuth) {
+  //if the code exists in the otp table
+  if (!await OTPRepository.checkOTPExists(email, code)) {
+    throw new AppError("Invalid action: The code you entered is wrong", 400);
+  }
+
+  //if the code exists update the twoWayAuth field in the user table
+  if ((await authRepository.updateTwoWayAuth(email, twoWayAuth)).matchedCount === 0) {
+    throw new AppError("Invalid action: Invalid credentials", 401);
+  }
+
+  return { message: "Two-way authentication updated successfully" };
 }
