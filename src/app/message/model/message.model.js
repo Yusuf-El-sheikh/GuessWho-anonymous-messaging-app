@@ -1,35 +1,37 @@
 import { model, Schema } from "mongoose";
-
 // message schema
 
-const messageSchema = new Schema({
+const messageSchema = new Schema(
+  {
     sender: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        default: null
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     reciever: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     content: {
-        type: String,
-        minlength: 1,
-        maxlength: 500,
-        required: true,
-        trim: true
+      type: String,
+      minlength: 2,
+      maxlength: 500,
+      required: true,
+      trim: true,
     },
     isDeleted: {
-        type: Boolean,
-        default: false
-    }
-}, {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
     timestamps: {
-        createdAt: true,
-        updatedAt: true
-    }
-});
+      createdAt: true,
+      updatedAt: true,
+    },
+  },
+);
 
 // message model
 

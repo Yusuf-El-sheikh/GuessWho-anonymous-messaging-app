@@ -4,13 +4,19 @@ import * as messageRepository from "../repository/message.repository.js";
 import { AppError } from "../../../lib/error/app.error.js";
 
 export async function sendMessage(sender, reciever, content) {
+  
+  // check if the sender is the reciever
+  if(sender === reciever){
+    throw new AppError("Invalid action: You cant message yourself, dummy!", 400);
+  }
+  
   //check reciever exists
-
   const user = await userRepository.getUserById(reciever);
 
-  if (!user) {
+  if (!user || user.isDeleted || !user.isVerified) {
     throw new AppError("Invalid action: Reciever not found", 404);
   }
+
 
   //save message into my db
   const message = await messageRepository.createMessage(
@@ -25,8 +31,8 @@ export async function sendMessage(sender, reciever, content) {
 export async function getAllMessages(userId) {
   const userMessages = await messageRepository.getAllMessages(userId);
   if (userMessages.length === 0) {
-    throw new AppError("Ivalid action: No messages found", 404);
+    throw new AppError("Invalid action: No messages found", 404);
   }
 
-  return userMessages
+  return userMessages;
 }
