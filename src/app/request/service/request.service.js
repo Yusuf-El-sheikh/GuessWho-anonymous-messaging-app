@@ -16,3 +16,7 @@ export async function createRequest(messageId, receiverId) {
   await requestRepository.createRequest(messageId);
   return { message: "Request sent successfully" };
 }
+
+export async function getMyRequests(userId) {
+  return await requestRepository.getMyRequests(userId);
+}
