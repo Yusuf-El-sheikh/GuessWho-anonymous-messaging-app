@@ -3,6 +3,7 @@ import express from "express";
 import { authRouter } from "./app/auth/auth.router.js";
 import { messageRouter } from "./app/message/message.router.js";
 import { userRouter } from "./app/user/user.router.js";
+import { requestRouter } from "./app/request/request.router.js";
 import { globalErrorHandler } from "./lib/error/globalErrorHandler.js";
 import cors from "cors";
 import { correlationId } from "./pkg/correlation/correlationId.js";
@@ -22,6 +23,7 @@ export function createApp() {
   app.use("/guess-who/auth", authRouter);
   app.use("/guess-who/message", messageRouter);
   app.use("/guess-who/user", userRouter);
+  app.use("/guess-who/request", requestRouter);
 
   app.use(globalErrorHandler);
 

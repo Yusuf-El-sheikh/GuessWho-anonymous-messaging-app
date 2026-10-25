@@ -6,14 +6,20 @@ export async function createMessage(sender, reciever, content) {
     content: content,
   });
 
-  return {message: "Message sent successfully."}
+  return { message: "Message sent successfully." };
 }
 
 export async function getAllMessages(userId) {
   //everything but user id
   return await messageModel.find(
-    { reciever: userId , isDeleted: false},
-    { content: 1, createdAt: 1, updatedAt: 1},
+    { reciever: userId, isDeleted: false },
+    { content: 1, createdAt: 1, updatedAt: 1 },
   );
+}
 
+export async function getMessageByIdAndReceiver(messageId, recieverId) {
+  return await messageModel.findOne(
+    { _id: messageId, reciever: recieverId, isDeleted: false },
+    { _id: 1 },
+  );
 }
