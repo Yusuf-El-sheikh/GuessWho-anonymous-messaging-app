@@ -7,3 +7,7 @@ export async function createConversation(messageId, senderId, recieverId) {
     recieverId,
   );
 }
+
+export async function findConversationById(conversationId){
+  return await conversationRepository.findConversationById(conversationId);
+}
