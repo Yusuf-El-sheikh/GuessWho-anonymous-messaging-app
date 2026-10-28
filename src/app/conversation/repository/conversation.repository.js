@@ -9,5 +9,9 @@ export async function createConversation(messageId, senderId, recieverId) {
 }
 
 export async function findConversationById(conversationId) {
-    return await conversationModel.findOne({_id: conversationId});
+  return await conversationModel.findOne({ _id: conversationId });
+}
+
+export async function findConversationByMessageId(messageId) {
+  return await conversationModel.findOne({ messageId: messageId });
 }
