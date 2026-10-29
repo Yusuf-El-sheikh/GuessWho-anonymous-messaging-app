@@ -7,7 +7,7 @@ export async function sendMessage(sender, reciever, content) {
   
   // check if the sender is the reciever
   if(sender === reciever){
-    throw new AppError("Invalid action: You cant message yourself, dummy!", 400);
+    throw new AppError("Invalid action: You cant message yourself", 400);
   }
   
   //check reciever exists
@@ -30,9 +30,6 @@ export async function sendMessage(sender, reciever, content) {
 
 export async function getAllMessages(userId) {
   const userMessages = await messageRepository.getAllMessages(userId);
-  if (userMessages.length === 0) {
-    throw new AppError("Invalid action: No messages found", 404);
-  }
 
   return userMessages;
 }
