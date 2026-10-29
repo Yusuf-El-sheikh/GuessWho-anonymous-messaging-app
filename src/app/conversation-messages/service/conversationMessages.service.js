@@ -2,11 +2,7 @@ import * as conversationMessagesRepository from "../repository/conversationMessa
 import * as conversationService from "../../conversation/service/conversation.service.js";
 import { AppError } from "../../../lib/error/app.error.js";
 
-export async function createConversationMessage(
-  conversationId,
-  userId,
-  content,
-) {
+export async function sendConversationMessage(conversationId, userId, content) {
   const conversation =
     await conversationService.findConversationById(conversationId);
 
@@ -15,8 +11,8 @@ export async function createConversationMessage(
   }
 
   if (
-    userId != String(conversation.sender) &&
-    userid != String(conversation.reciever)
+    userId !== String(conversation.sender) &&
+    userId !== String(conversation.reciever)
   ) {
     throw new AppError("Invalid action: Conversation not found", 404);
   }
@@ -30,15 +26,21 @@ export async function createConversationMessage(
   return { message: "Message sent successfully" };
 }
 
-export async function getConversationMessages(conversationId) {
+export async function getConversationMessages(conversationId, userId) {
   const conversation =
-    await conversationMessagesRepository.getConversationMessages(
-      conversationId,
-    );
-
-  if (!conversation) {
+    await conversationService.findConversationById(conversationId);
+  
+    if (!conversation) {
     throw new AppError("Invalid action: Conversation not found", 404);
   }
-  
-  return conversation;
+
+  if (
+    userId !== String(conversation.sender) &&
+    userId !== String(conversation.reciever)
+  ) {
+    throw new AppError("Invalid action: Conversation not found", 404);
+  }
+
+  const conversationMessages = await conversationMessagesRepository.getConversationMessages(conversationId);
+  return conversationMessages;
 }
